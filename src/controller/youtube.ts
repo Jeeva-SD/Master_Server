@@ -10,14 +10,9 @@ class YoutubeController {
         this.youtube = this.ytInstance();
     }
 
-    @GET('/title')
+    @GET('/tags')
     public tagsByTitle(req: Request) {
-        return this.youtube.tagsByTitle(req.query);
-    }
-
-    @GET('/url')
-    public tagsByURL(req: Request) {
-        return this.youtube.tagsByURL(req.query);
+        return this.youtube.tags(req.query);
     }
 
     private ytInstance(): Youtube {
