@@ -1,8 +1,8 @@
 import application from './app';
 import * as dotenv from 'dotenv';
-const { parsed: env } = dotenv.config()
+dotenv.config()
 
-const port = env?.PORT || 1010;
+const port = process?.env?.PORT || 1010;
 
 const app = application.instance;
 
