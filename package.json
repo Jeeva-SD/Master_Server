@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "prestart": "tsc",
-    "start": "nodemon ./src/server.ts"
+    "start": "node ./dist/server.js"
   },
   "author": "Jee6",
   "license": "ISC",
