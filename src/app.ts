@@ -1,8 +1,7 @@
 import * as express from 'express';
-import e = require('express');
 import { combineRouter } from './router/index';
 import { getMetaData, Route } from './utils';
-
+const cors = require('cors')
 class Application {
     private readonly app: express.Application;
 
@@ -14,6 +13,7 @@ class Application {
         this.app = express();
         this.app.use(express.json());
         this.registerRouters();
+        this.app.use(cors())
     }
 
     private registerRouters() {
