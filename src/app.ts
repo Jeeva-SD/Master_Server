@@ -11,9 +11,9 @@ class Application {
 
     constructor() {
         this.app = express();
+        this.app.use(cors())
         this.app.use(express.json());
         this.registerRouters();
-        this.app.use(cors())
     }
 
     private registerRouters() {
