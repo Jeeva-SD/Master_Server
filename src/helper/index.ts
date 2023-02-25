@@ -12,3 +12,8 @@ export function youtubeVideoId(url: string) {
     if (ampersandPosition != -1) videoId = videoId.substring(0, ampersandPosition);
     return videoId;
 }
+
+export const isInstagramUrlValid = (url: string) => {
+    const regex = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/([\w\.]+)/i;
+    return regex.test(url);
+}
