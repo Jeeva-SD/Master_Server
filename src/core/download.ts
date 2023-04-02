@@ -35,7 +35,7 @@ class Download {
             let hasQuality: any[] = [];
 
             let downloadLink: string = response?.url?.map((e: any, index: number) => {
-                if (e.hasOwnProperty('quality')) hasQuality.push({ ...e, index });
+                if (e.hasOwnProperty('quality') || e.hasOwnProperty('url')) hasQuality.push({ ...e, index });
                 return e.url;
             })[response?.url?.length - 1]?.url;
 

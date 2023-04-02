@@ -4,20 +4,20 @@ import { controller, GET } from '../utils';
 
 @controller('/download')
 class DownloadController {
-    private download: Download;
+    private downloader: Download;
 
     constructor() {
-        this.download = this.ytInstance();
+        this.downloader = this.downloadInstance();
     }
 
     @GET('/')
     public tagsByTitle(req: Request) {
-        return this.download.download(String(req.query.url));
+        return this.downloader.download(String(req.query.url));
     }
 
-    private ytInstance(): Download {
-        if (!this.download) this.download = new Download();
-        return this.download;
+    private downloadInstance(): Download {
+        if (!this.downloader) this.downloader = new Download();
+        return this.downloader;
     }
 }
 
