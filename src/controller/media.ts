@@ -17,7 +17,7 @@ class MediaController {
         return videoPath;
     }
 
-    @POST('/trim')
+    @POST('/trim', true)
     public trim(req: Request, res: Response) {
         return this.media.trim(req.body, res);
     }

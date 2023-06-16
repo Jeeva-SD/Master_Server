@@ -41,7 +41,7 @@ class Application {
                     const response = (controllerInstance as any)[methodName](req, res);
 
                     if (route.hasFile) {
-                        if (response instanceof Promise) return response.then((path: string) => res.sendFile(path));
+                        if (response instanceof Promise) return response.then((path: any) => path.pipe(res));
                         return res.sendFile(response);
                     }
                     else if (response instanceof Promise) return response.then((data: ApiResult) => res.send(data));

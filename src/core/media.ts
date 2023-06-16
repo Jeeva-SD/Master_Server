@@ -12,8 +12,8 @@ class MediaCore {
 
     public async trim({ videoUrl, startTime, duration }: any, res: any) {
         try {
-            const videoPath = path.join(__dirname, '..', 'assets', 'RabbitMQ in 100 Seconds.mp4');
-            const deleteFile = false;
+            const videoPath = path.join(__dirname, '..', 'assets', 'Rust.mp4');
+            const deleteFile = true;
 
             ffmpeg.setFfmpegPath(this.ffmpegPath);
 
@@ -22,23 +22,28 @@ class MediaCore {
                     .setStartTime(startTime)
                     .setDuration(duration)
                     .format('mp4')
+                    .outputOptions('-acodec', 'copy')
                     .on('end', () => {
                         const trimmedVideoPath = './trimmed_video.mp4';
-                        console.log('File created');
 
                         if (deleteFile) {
                             setTimeout(() => {
                                 fs.unlink(trimmedVideoPath, (err) => {
-                                    if (err) {
-                                        console.error('Error deleting file:', err);
-                                    } else {
-                                        console.log('File deleted successfully.');
-                                    }
+                                    if (err) console.error('Error deleting file:', err);
+                                    else console.log('File deleted successfully.');
                                 });
                             }, 5000);
                         }
 
-                        return resolve(take(505));
+                        const stat = fs.statSync(trimmedVideoPath);
+                        const fileSize = stat.size;
+
+                        res.writeHead(200, {
+                            'Content-Length': fileSize,
+                            'Content-Type': 'video/mp4',
+                        });
+
+                        return resolve(fs.createReadStream(trimmedVideoPath));
                     })
                     .on('error', (err: any) => {
                         console.error('Error trimming video:', err.message);
