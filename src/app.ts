@@ -1,7 +1,8 @@
 import * as express from 'express';
+import * as cors from 'cors';
 import { combineRouter } from './router/index';
-import { getMetaData, Route } from './utils';
-const cors = require('cors')
+import { ApiResult, getMetaData, Route } from './utils';
+
 class Application {
     private readonly app: express.Application;
 
@@ -18,7 +19,7 @@ class Application {
 
     private registerRouters() {
         this.app.get('/', (req: express.Request, res: express.Response) => {
-            res.json({ message: 'Tags here!' });
+            res.json({ code: 100, message: 'In action' });
         });
 
         this.attachRouters();
@@ -39,8 +40,12 @@ class Application {
                 router[routeMethod](route.url, async (req: express.Request, res: express.Response) => {
                     const response = (controllerInstance as any)[methodName](req, res);
 
-                    if (response instanceof Promise) return response.then((data) => res.send(data));
-                    res.send(response);
+                    if (route.hasFile) {
+                        if (response instanceof Promise) return response.then((path: string) => res.sendFile(path));
+                        return res.sendFile(response);
+                    }
+                    else if (response instanceof Promise) return response.then((data: ApiResult) => res.send(data));
+                    else res.send(response);
                 });
 
                 this.app.use(controllerPath, router);

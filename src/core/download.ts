@@ -9,7 +9,7 @@ class Download {
             if (!isInstagramUrlValid(url)) return exception('Enter valid url');
 
             let response = null;
-            const { data } = await axios.post("https://ssyoutube.com/api/convert", { url });
+            const { data } = await axios.post('https://ssyoutube.com/api/convert', { url });
 
             if (data.hasOwnProperty('url')) response = data;
             else if (Array.isArray(data) && data?.length > 0) response = data[0];

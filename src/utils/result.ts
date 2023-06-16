@@ -47,7 +47,7 @@ export const take = (code: number, data?: any, params?: any): ApiResult => {
 }
 
 export const exception = (error: string | any, data?: any): ApiResult => {
-    const message = (typeof error === "string") ? error : (error.message ? error.message : error);
+    const message = (typeof error === 'string') ? error : (error.message ? error.message : error);
     return createResult(103, data, { message });
 }
 

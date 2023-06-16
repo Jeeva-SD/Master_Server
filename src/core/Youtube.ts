@@ -47,7 +47,7 @@ class Youtube {
     public async youtubeSuggestions(query: string, count?: number) {
         try {
             let response: string[] = []
-            const { data } = await axios.get("https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=" + query);
+            const { data } = await axios.get('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + query);
             const result: any = JSON.parse(data.replace(/^.*?\(/, '').replace(/\)$/, ''));
 
             result[1]?.forEach((arr: any, index: number) => {
@@ -69,7 +69,7 @@ class Youtube {
         try {
             async function getSuggestions(query: string, count?: number) {
                 let response: string[] = []
-                const { data } = await axios.get("https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=" + query);
+                const { data } = await axios.get('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + query);
                 const result: any = JSON.parse(data.replace(/^.*?\(/, '').replace(/\)$/, ''));
 
                 result[1]?.forEach((arr: any, index: number) => {

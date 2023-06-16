@@ -7,15 +7,15 @@ export const controller = (controller: string): ClassDecorator => {
     };
 }
 
-export const methodDecorator = (method: string, path: string): MethodDecorator => {
+export const methodDecorator = (method: string, path: string, hasFile: boolean = false): MethodDecorator => {
     return (target: any, methodName: string, descriptor: PropertyDescriptor) => {
         const meta = getMetaData(target);
-        meta.routes[methodName] = { method, url: path };
+        meta.routes[methodName] = { method, url: path, hasFile };
         return descriptor;
     }
 }
 
-export const GET = (path: string) => methodDecorator('get', path);
-export const POST = (path: string) => methodDecorator('post', path);
-export const PUT = (path: string) => methodDecorator('put', path);
-export const DELETE = (path: string) => methodDecorator('delete', path);
+export const GET = (path: string, hasFile: boolean = false) => methodDecorator('get', path, hasFile);
+export const POST = (path: string, hasFile: boolean = false) => methodDecorator('post', path, hasFile);
+export const PUT = (path: string, hasFile: boolean = false) => methodDecorator('put', path, hasFile);
+export const DELETE = (path: string, hasFile: boolean = false) => methodDecorator('delete', path, hasFile);

@@ -1,6 +1,7 @@
 export interface Route {
     method: string;
     url: string;
+    hasFile: boolean;
 }
 
 export interface MetaData {
