@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import path = require('path');
 import mediaCore from '../core/media';
-import { controller, GET, POST } from '../utils';
+import { controller, GET } from '../utils';
 
 @controller('/media')
 class MediaController {
@@ -17,9 +17,9 @@ class MediaController {
         return videoPath;
     }
 
-    @POST('/trim', true)
+    @GET('/trim', true)
     public trim(req: Request, res: Response) {
-        return this.media.trim(req.body, res);
+        return this.media.trim(req.query, res);
     }
 
     private mediaInstance(): mediaCore {

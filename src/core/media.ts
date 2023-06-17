@@ -1,60 +1,54 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
+import { v4 as uuid } from 'uuid';
+import Download from './download';
 import { take } from '../utils';
 
 class MediaCore {
     private ffmpegPath: string;
+    private deleteFile: boolean;
+    private downloader: Download;
 
     constructor() {
-        this.ffmpegPath = '/usr/bin/ffmpeg';
+        this.ffmpegPath = 'D:\\Jeeva\\ffmpeg\\bin\\ffmpeg.exe';
+        this.deleteFile = true;
+        this.downloader = this.downloadInstance();
+        ffmpeg.setFfmpegPath(this.ffmpegPath);
     }
 
-    public async trim({ videoUrl, startTime, duration }: any, res: any) {
+    public async trim(params: any, res: any) {
         try {
+            const { url, start, duration, yt = false, title = uuid() } = params;
             const videoPath = path.join(__dirname, '..', 'assets', 'Rust.mp4');
-            const deleteFile = true;
+            let trimDuration = 0;
+            let downloadedFile: string = '';
+            let startTime = start ? start : 0;
 
-            ffmpeg.setFfmpegPath(this.ffmpegPath);
+            ffmpeg.ffprobe(videoPath, (err, metadata) => {
+                if (err) {
+                    console.error('Error getting video information:', err);
+                    return;
+                }
 
-            return await new Promise((resolve, reject) => {
-                ffmpeg(videoPath)
-                    .setStartTime(startTime)
-                    .setDuration(duration)
-                    .format('mp4')
-                    .outputOptions('-acodec', 'copy')
-                    .on('end', () => {
-                        const trimmedVideoPath = './trimmed_video.mp4';
-
-                        if (deleteFile) {
-                            setTimeout(() => {
-                                fs.unlink(trimmedVideoPath, (err) => {
-                                    if (err) console.error('Error deleting file:', err);
-                                    else console.log('File deleted successfully.');
-                                });
-                            }, 5000);
-                        }
-
-                        const stat = fs.statSync(trimmedVideoPath);
-                        const fileSize = stat.size;
-
-                        res.writeHead(200, {
-                            'Content-Length': fileSize,
-                            'Content-Type': 'video/mp4',
-                        });
-
-                        return resolve(fs.createReadStream(trimmedVideoPath));
-                    })
-                    .on('error', (err: any) => {
-                        console.error('Error trimming video:', err.message);
-                        reject(err);
-                    })
-                    .save('./trimmed_video.mp4');
+                const { videoDuration } = metadata.format;
+                trimDuration = duration ? duration : videoDuration;
             });
+
+            if (yt) {
+                downloadedFile = await this.downloader.youtube({ url, title, ffmpeg, startTime, duration });
+                return fs.createReadStream(downloadedFile);
+            }
+
         } catch (error) {
             console.error('Error trimming video:', error.message);
             res.status(500).json({ error: 'Error trimming video' });
         }
+    }
+
+    private downloadInstance(): Download {
+        if (!this.downloader) this.downloader = new Download();
+        return this.downloader;
     }
 }
 
