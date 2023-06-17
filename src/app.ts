@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as cors from 'cors';
+import { v4 as uuid } from 'uuid';
 import { combineRouter } from './router/index';
 import { ApiResult, getMetaData, Route } from './utils';
 
@@ -12,7 +13,7 @@ class Application {
 
     constructor() {
         this.app = express();
-        this.app.use(cors())
+        this.app.use(cors());
         this.app.use(express.json());
         this.registerRouters();
     }
@@ -41,6 +42,22 @@ class Application {
                     const response = (controllerInstance as any)[methodName](req, res);
 
                     if (route.hasFile) {
+
+                        const exts = {
+                            video: 'mp4',
+                            audio: 'mp3'
+                        };
+
+                        const contentTypes = {
+                            video: 'video/mp4',
+                            audio: 'audio/mpeg'
+                        };
+
+                        const title = `${req.query.title || uuid()}.${exts.video}`;
+
+                        res.setHeader('Content-Type', contentTypes.video);
+                        res.setHeader('Content-Disposition', `attachment; filename=${title}; filename*=utf-8''${title}`);
+
                         if (response instanceof Promise) return response.then((path: any) => path.pipe(res));
                         return res.sendFile(response);
                     }
@@ -49,8 +66,8 @@ class Application {
                 });
 
                 this.app.use(controllerPath, router);
-            })
-        })
+            });
+        });
     }
 }
 

@@ -8,3 +8,5 @@ export const databaseCredentials = {
     database: 'youtube',
     connectionLimit: 10,
 };
+
+export const ffmpegPath = 'D:\\Jeeva\\ffmpeg\\bin\\ffmpeg.exe';

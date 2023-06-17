@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as ffmpeg from 'fluent-ffmpeg';
 import { v4 as uuid } from 'uuid';
 import Download from './download';
-import { take } from '../utils';
+import { unlink } from '../helper';
 
 class MediaCore {
     private ffmpegPath: string;
@@ -20,23 +20,14 @@ class MediaCore {
     public async trim(params: any, res: any) {
         try {
             const { url, start, duration, yt = false, title = uuid() } = params;
-            const videoPath = path.join(__dirname, '..', 'assets', 'Rust.mp4');
             let trimDuration = 0;
             let downloadedFile: string = '';
             let startTime = start ? start : 0;
 
-            ffmpeg.ffprobe(videoPath, (err, metadata) => {
-                if (err) {
-                    console.error('Error getting video information:', err);
-                    return;
-                }
-
-                const { videoDuration } = metadata.format;
-                trimDuration = duration ? duration : videoDuration;
-            });
-
             if (yt) {
                 downloadedFile = await this.downloader.youtube({ url, title, ffmpeg, startTime, duration });
+                unlink(downloadedFile, 10000);
+
                 return fs.createReadStream(downloadedFile);
             }
 

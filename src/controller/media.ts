@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import path = require('path');
 import mediaCore from '../core/media';
 import { controller, GET } from '../utils';
 
@@ -9,12 +8,6 @@ class MediaController {
 
     constructor() {
         this.media = this.mediaInstance();
-    }
-
-    @GET('/video', true)
-    public video() {
-        const videoPath = path.join(__dirname, '../../trimmed_video.mp4');
-        return videoPath;
     }
 
     @GET('/trim', true)

@@ -3,9 +3,16 @@ import * as ytdl from 'ytdl-core';
 import * as fs from 'fs';
 import { dataList, exception } from '../utils';
 import { downloadOptions } from '../types/download';
-import { isInstagramUrlValid } from '../helper';
+import { isInstagramUrlValid, unlink } from '../helper';
+import Editor from '../utils';
 
 class Download {
+    private ff: Editor;
+
+    constructor() {
+        this.ff = this.ffInstance();
+    }
+
     public async download(url: string) {
         try {
             if (!isInstagramUrlValid(url)) return exception('Enter valid url');
@@ -65,35 +72,19 @@ class Download {
             return new Promise((resolve, reject) => {
                 const videoStream = ytdl(url, { format: videoFormat });
                 const audioStream = ytdl(url, { format: audioFormat });
-                const outputStream = fs.createWriteStream(fileName);
+                const outputStream = fs.createWriteStream(`./src/assets/downloads/${fileName}`);
 
                 videoStream.pipe(outputStream);
 
                 videoStream.on('end', () => {
-                    const audioFilePath = `audio_${fileName}`.replace('mp4', 'mp3');
-                    const mergedFilePath = `merged_${fileName}`;
+                    const audioFilePath = `./src/assets/downloads/audio_${fileName}`.replace('mp4', 'mp3');
+                    const mergedFilePath = `./src/assets/downloads/merged_${fileName}`;
 
                     audioStream.pipe(fs.createWriteStream(audioFilePath))
                         .on('finish', () => {
-                            ffmpeg()
-                                .input(outputStream.path)
-                                .input(audioFilePath)
-                                .setStartTime(startTime)
-                                .setDuration(duration)
-                                .videoCodec('copy')
-                                .audioCodec('aac')
-                                .output(mergedFilePath)
-                                .on('end', () => {
-                                    fs.unlink(outputStream.path, () => { });
-                                    fs.unlink(audioFilePath, () => { });
-                                    console.log('YouTube Video downloaded successfully.');
-                                    resolve(mergedFilePath);
-                                })
-                                .on('error', (error: any) => {
-                                    console.error('Error merging video and audio:', error);
-                                    reject(fileName);
-                                })
-                                .run();
+                            unlink(outputStream.path, 10000);
+                            unlink(audioFilePath, 10000);
+                            resolve(this.ff.trimVideo(audioFilePath, mergedFilePath, startTime, duration));
                         });
                 });
 
@@ -105,6 +96,11 @@ class Download {
         } catch (error) {
             console.error('Error downloading YouTube video:', error);
         }
+    }
+
+    private ffInstance(): Editor {
+        if (!this.ff) this.ff = new Editor();
+        return this.ff;
     }
 }
 
