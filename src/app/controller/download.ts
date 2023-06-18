@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import Download from '../core/download';
-import { controller, GET } from '../utils';
+import { controller, GET } from '../../utils';
 
 @controller('/download')
 class DownloadController {

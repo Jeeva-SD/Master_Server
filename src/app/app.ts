@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 import { v4 as uuid } from 'uuid';
 import { combineRouter } from './router/index';
-import { ApiResult, getMetaData, Route } from './utils';
+import { ApiResult, getMetaData, Route } from '../utils';
 
 class Application {
     private readonly app: express.Application;

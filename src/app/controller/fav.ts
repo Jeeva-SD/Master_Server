@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { controller, POST } from '../utils';
+import { controller, POST } from '../../utils';
 import Fav from '../core/fav';
 
 @controller('/fav')

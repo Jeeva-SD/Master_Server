@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import mediaCore from '../core/media';
-import { controller, GET } from '../utils';
+import { controller, GET } from '../../utils';
 
 @controller('/media')
 class MediaController {

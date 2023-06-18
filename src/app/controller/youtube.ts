@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import Youtube from '../core/Youtube';
-import { controller, GET } from '../utils';
+import { controller, GET } from '../../utils';
 
 @controller('/youtube')
 class YoutubeController {

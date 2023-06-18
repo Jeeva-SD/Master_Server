@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { validateYouTubeUrl, youtubeVideoId } from '../helper';
-import { exception, dataList } from '../utils';
+import { validateYouTubeUrl, youtubeVideoId } from '../../helper';
+import { exception, dataList } from '../../utils';
 
 class Youtube {
 
@@ -46,7 +46,7 @@ class Youtube {
 
     public async youtubeSuggestions(query: string, count?: number) {
         try {
-            let response: string[] = []
+            let response: string[] = [];
             const { data } = await axios.get('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + query);
             const result: any = JSON.parse(data.replace(/^.*?\(/, '').replace(/\)$/, ''));
 
@@ -68,7 +68,7 @@ class Youtube {
     private async proTags(queryArr: string[]) {
         try {
             async function getSuggestions(query: string, count?: number) {
-                let response: string[] = []
+                let response: string[] = [];
                 const { data } = await axios.get('https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=' + query);
                 const result: any = JSON.parse(data.replace(/^.*?\(/, '').replace(/\)$/, ''));
 
@@ -99,8 +99,8 @@ class Youtube {
                 let proTags: string[] = [];
 
                 results.forEach((tags: string[]) => {
-                    proTags.push(...tags)
-                })
+                    proTags.push(...tags);
+                });
 
                 return [...new Set(proTags)];
             }).catch(error => {

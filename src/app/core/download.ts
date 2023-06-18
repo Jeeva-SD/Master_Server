@@ -1,10 +1,10 @@
 import axios from 'axios';
 import * as ytdl from 'ytdl-core';
 import * as fs from 'fs';
-import { dataList, exception } from '../utils';
-import { downloadOptions } from '../types/download';
-import { isInstagramUrlValid, unlink } from '../helper';
-import Editor from '../utils';
+import { dataList, exception } from '../../utils';
+import { downloadOptions } from '../../types/download';
+import { isInstagramUrlValid, unlink } from '../../helper';
+import Editor from '../../utils';
 
 class Download {
     private ff: Editor;
@@ -62,7 +62,7 @@ class Download {
 
     public async youtube(params: any): Promise<string> {
         try {
-            const { url, title, ffmpeg, startTime, duration } = params;
+            const { url, title, startTime, duration } = params;
             const fileName = `${title}.mp4`;
 
             const videoInfo = await ytdl.getInfo(url);
