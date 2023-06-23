@@ -9,4 +9,5 @@ export const databaseCredentials = {
     connectionLimit: 10,
 };
 
-export const ffmpegPath = 'D:\\Jeeva\\ffmpeg\\bin\\ffmpeg.exe';
+// export const ffmpegPath = 'D:\\Jeeva\\ffmpeg\\bin\\ffmpeg.exe';
+export const ffmpegPath = '/usr/bin/ffmpeg';
